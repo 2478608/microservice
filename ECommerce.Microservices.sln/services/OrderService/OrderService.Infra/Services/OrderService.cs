@@ -1,6 +1,7 @@
 ﻿using OrderService.Core.DTOs;
 using OrderService.Core.Interfaces.Services;
 using OrderService.Infra.HttpClients;
+using Polly.CircuitBreaker;
 
 namespace OrderService.Infra.Services
 {
@@ -14,12 +15,23 @@ namespace OrderService.Infra.Services
         }
         public async Task<OrderResponseDto> PlaceOrderAsync(CreateOrderRequestDto request)
         {
-            var prod = await _productClient.GetProductAsync(request.ProductId);
-            return new OrderResponseDto
+            try
             {
-                ProductId = request.ProductId,
-                TotalAmount = prod.Price * request.Quantity
-            };
+                var prod = await _productClient.GetProductAsync(request.ProductId);
+                return new OrderResponseDto
+                {
+                    ProductId = request.ProductId,
+                    TotalAmount = prod.Price * request.Quantity
+                };
+            }
+            catch (BrokenCircuitException)
+            {
+                throw new ApplicationException("Product service temp unaivalbel (circuit open)");
+            }
+            catch (TimeoutException)
+            {
+                throw new ApplicationException("Product service requist timed out");
+            }            
         }
     }
 }

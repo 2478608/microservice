@@ -1,5 +1,5 @@
 using OrderService.Core;
-using OrderService.Infrastructure;
+using OrderService.Infra;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -14,7 +14,9 @@ namespace OrderService.Infra.HttpClients
         public async Task<ProductDto> GetProductAsync(int  productId)
         {
             var response = await _httpClient.GetAsync($"api/products/{productId}");
-            response.EnsureSuccessStatusCode();
+
+            if (!response.IsSuccessStatusCode)
+                throw new ApplicationException("Product service unavailable");
 
             var json = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<ProductDto>(json)!;
