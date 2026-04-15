@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Polly;
-using Polly.Extensions.Http;
 using OrderService.Core.Interfaces.Services;
 using OrderService.Infra.HttpClients;
 using OrderService.Infra.Policies;
@@ -13,11 +11,11 @@ namespace OrderService.Infra
         {
             services.AddHttpClient<ProductHttpClient>(client =>
             {
-                client.BaseAddress = new Uri("http://localhost:5035"); // ProductService URL
+                client.BaseAddress = new Uri("http://localhost:5035");
             })
             .AddPolicyHandler(PollyPolicies.CombinedPolicy);
 
-            services.AddScoped<IOrderService, Infra.Services.OrderService>();
+            services.AddScoped<IOrderService, Services.OrderService>();
 
             return services;
         }

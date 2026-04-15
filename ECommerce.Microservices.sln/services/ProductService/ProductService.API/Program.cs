@@ -1,51 +1,47 @@
-
 using ProductService.Core;
-using ProductService.Core.Entities;
+using ProductService.Core.Interfaces.Services;
 using ProductService.Infra;
 using ProductService.Infra.Data;
 
-namespace ProductService.API
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
+// ✅ Redis
+builder.Services.AddStackExchangeRedisCache(options =>
 {
-    public class Program
+    var baseConn = builder.Configuration["Redis:ConnectionString"];
+    var password = builder.Configuration["Redis:Password"];
+
+    if (string.IsNullOrWhiteSpace(password))
+        throw new InvalidOperationException(
+            "Redis password is missing. Set Redis__Password environment variable.");
+
+    options.Configuration = $"{baseConn},password={password}";
+});
+
+builder.Services.AddCore();
+builder.Services.AddInfrastructure("");
+
+var app = builder.Build();
+
+// ✅ Seed + invalidate cache (FIXED)
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
+    var service = scope.ServiceProvider.GetRequiredService<IProductService>();
+
+    db.Products.Add(new ProductService.Core.Entities.Product { Id = 1, Name = "Laptop", Price = 50000 });
+    db.Products.Add(new ProductService.Core.Entities.Product { Id = 2, Name = "Phone", Price = 30000 });
+    db.SaveChanges();
+
+    // ✅ safe cast to access invalidation
+    if (service is ProductService.Infra.Services.ProductService concrete)
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-
-            builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddCore();
-            builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("Default") ?? "");
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.MapOpenApi();
-            }
-
-
-            // Seed data
-            using (var scope = app.Services.CreateScope())
-            {
-                var db = scope.ServiceProvider.GetRequiredService<ProductDbContext>();
-                db.Products.Add(new Product { Id = 1, Name = "Laptop", Price = 50000 });
-                db.Products.Add(new Product { Id = 2, Name = "Phone", Price = 30000 });
-                db.SaveChanges();
-            }
-
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
-        }
+        concrete.InvalidateProductCache(1);
+        concrete.InvalidateProductCache(2);
     }
 }
+
+app.MapControllers();
+app.Run();

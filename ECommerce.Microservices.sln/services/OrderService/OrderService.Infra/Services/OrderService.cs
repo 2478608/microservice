@@ -13,11 +13,13 @@ namespace OrderService.Infra.Services
         {
             _productClient = productClient;
         }
+
         public async Task<OrderResponseDto> PlaceOrderAsync(CreateOrderRequestDto request)
         {
             try
             {
                 var prod = await _productClient.GetProductAsync(request.ProductId);
+
                 return new OrderResponseDto
                 {
                     ProductId = request.ProductId,
@@ -26,12 +28,8 @@ namespace OrderService.Infra.Services
             }
             catch (BrokenCircuitException)
             {
-                throw new ApplicationException("Product service temp unaivalbel (circuit open)");
+                throw new ApplicationException("Product service temporarily unavailable");
             }
-            catch (TimeoutException)
-            {
-                throw new ApplicationException("Product service requist timed out");
-            }            
         }
     }
 }
