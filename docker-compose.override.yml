@@ -1,0 +1,12 @@
+services:
+  api-gateway:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+
+  product-service:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+
+  order-service:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development

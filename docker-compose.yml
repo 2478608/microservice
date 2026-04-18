@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: ./services/ApiGateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - order-service
+      - product-service
+
+  product-service:
+    container_name: product-service
+    build:
+      context: ./services/ProductService/ProductService.API
+    ports:
+      - "5035:5035"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+
+  order-service:
+    container_name: order-service
+    build:
+      context: ./services/OrderService/OrderService.API
+    ports:
+      - "5127:5127"
+    depends_on:
+      - product-service
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+
+  # rabbitmq:
+  # image: rabbitmq:3-management
+  # ports:
+  #   - "5672:5672"
+  #   - "15672:15672"
+
+  #   zookeeper:
+  #     image: bitnami/zookeeper
+  #     environment:
+  #       ALLOW_ANONYMOUS_LOGIN: "yes"
+
+    # kafka:
+    #   image: bitnami/kafka
+    #   ports:
+    #     - "9092:9092"
+    #   environment:
+    #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+    #     ALLOW_PLAINTEXT_LISTENER: "yes"

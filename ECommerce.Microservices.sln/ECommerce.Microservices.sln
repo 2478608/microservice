@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.4.11626.88 stable
+VisualStudioVersion = 18.4.11626.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.API", "services\OrderService\OrderService.API\OrderService.API.csproj", "{A1AB1B4F-01FF-412B-A87D-E6A4D3E18503}"
 EndProject
@@ -14,6 +14,17 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService.Core", "services\ProductService\ProductService.Core\ProductService.Core.csproj", "{FF6B08DC-066C-4657-BEC6-723DFE233F9A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService.Infra", "services\ProductService\ProductService.Infra\ProductService.Infra.csproj", "{E714B680-A374-4B06-B79D-9E8EAFC05589}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A9E0DEAD-B087-4E61-8302-DBC6CE6D7F74}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\docker-compose.override.yml = ..\docker-compose.override.yml
+		..\docker-compose.yml = ..\docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "services\ApiGateway\ApiGateway.csproj", "{5FF7E239-0F86-4159-BFDE-E4729E124C1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "services\Shared\Shared.csproj", "{5B8726B6-1053-4C3D-8F0F-6D2E8C3F015A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +56,14 @@ Global
 		{E714B680-A374-4B06-B79D-9E8EAFC05589}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E714B680-A374-4B06-B79D-9E8EAFC05589}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E714B680-A374-4B06-B79D-9E8EAFC05589}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FF7E239-0F86-4159-BFDE-E4729E124C1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FF7E239-0F86-4159-BFDE-E4729E124C1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FF7E239-0F86-4159-BFDE-E4729E124C1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FF7E239-0F86-4159-BFDE-E4729E124C1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B8726B6-1053-4C3D-8F0F-6D2E8C3F015A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B8726B6-1053-4C3D-8F0F-6D2E8C3F015A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B8726B6-1053-4C3D-8F0F-6D2E8C3F015A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B8726B6-1053-4C3D-8F0F-6D2E8C3F015A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,22 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using ProductService.Core.Interfaces.Repositories;
-using ProductService.Core.Interfaces.Services;
-using ProductService.Infra.Data;
-using ProductService.Infra.Repositories;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ProductService.Infra.Messaging.Kafka;
+using ProductService.Infra.Messaging.RabbitMQ;
+using ProductService.Infra.HostedServices;
 
 namespace ProductService.Infra
 {
     public static class DependencyInjection
     {
-
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services,string connectionString)
+        public static IServiceCollection AddInfrastructure(
+            this IServiceCollection services,
+            string connectionString)
         {
-            services.AddDbContext<ProductDbContext>(options =>
-                options.UseInMemoryDatabase("ProductDb"));
+            services.AddSingleton<OrderCreatedConsumer>();
+            services.AddSingleton<KafkaOrderConsumer>();
 
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IProductService, Services.ProductService>();
+            services.AddHostedService<RabbitMqHostedService>();
+            services.AddHostedService<KafkaHostedService>();
 
             return services;
         }
